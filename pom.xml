@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+        <groupId>sf.swe.rovr</groupId>
+        <artifactId>rovr-was85-root</artifactId>
+	<name>${project.artifactId}</name>
+	<version>3.2.4-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	    <modules>
+	    <module>SWE04_SR</module>
+        <module>WS</module>
+        
+    </modules>
+	
+    <properties>
+        <!-- Output properties for manifest -->
+        <source.coordinates>${project.scm.connection}</source.coordinates>
+        <build.coordinates>${env.COMPUTERNAME}</build.coordinates>
+        <maven.build.timestamp.format>yyyy-MM-dd-HH:mm</maven.build.timestamp.format>
+        <timestamp>${maven.build.timestamp}</timestamp>
+
+        <earSourceDirectory>src/main/application</earSourceDirectory>
+        <warSourceDirectory>src/main/webapp</warSourceDirectory>
+        <ejbSourceDirectory>src/main/ejbModule</ejbSourceDirectory>
+
+        <!-- lib.root: The directory where jars are placed in the ear. Used by 
+			ear, ejb, jar, and war plugins. NOTE: ejb, jar and war plugins use this to 
+			generate the correct jar path in the manifest. -->
+        <lib.root>lib</lib.root>
+
+        <!-- customClasspathLayout and fileNameMapping is used to determine the 
+			artifact name. These properties are used by different plugins, but they must 
+			match for a successful build. customClasspathLayout is used by the archiver 
+			utility (jar, war, ejb). fileNameMapping is used by the ear plugin. -->
+        <customClasspathLayout>lib/$${artifact.artifactId}.$${artifact.extension}</customClasspathLayout>
+        <fileNameMapping>no-version</fileNameMapping>
+
+        <was.home>${was85.home}</was.home>
+        
+<!--
+<java.home>${was.home}\java_1.7_64</java.home>
+        <java.home>C:\SDP\WebSphere\AppServer\java_1.7_32</java.home>
+-->
+
+        <ant.runtime.version>1.9.3</ant.runtime.version>
+        <!-- This property is set in case the repo needs to be changed to apps-release-temp-clt -->
+        <release_repo>apps-releases-local</release_repo>
+        <!-- Added property for artifactory deployer plugin version..by Prasad Kurella -->
+        <artifact-deployer.version>2.3.0-RC-333379432</artifact-deployer.version>
+
+        <!-- The following encoding is required for the build to work properly -->
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
+        <sonar.profile>SonarAEAT</sonar.profile>
+
+        <default.output.directory>target/classes</default.output.directory>
+
+        <environment.profile />
+        <cxf.version>2.6.7</cxf.version>
+        <jdk.version>1.7</jdk.version>
+        <pmd.plugin.version>2.7.1</pmd.plugin.version>
+        <findbugs.plugin.version>2.5.3</findbugs.plugin.version>
+        <checkstyle.plugin.version>2.16</checkstyle.plugin.version>
+        <jupiter.plugin.version>1.0.10</jupiter.plugin.version>
+		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+     	<java.version>1.7</java.version>
+        <junit.version>4.10</junit.version>
+        <jaxbimpl.version>2.1.12</jaxbimpl.version>
+        <jaxbapi.version>2.1</jaxbapi.version>
+
+        
+                <!-- ************* CI Properties ********************** -->
+        <!-- error is default if require can be changed to warning or other parmater -->
+        <checkstyle.violationSeverity>error</checkstyle.violationSeverity>
+        <cobertura.exclude>src/test/*</cobertura.exclude>
+        <cobertura.haltOnFailure>true</cobertura.haltOnFailure>
+        <emma.version>1.0-alpha-3</emma.version>
+        
+        <emma.classRate>100</emma.classRate>
+        <emma.methodRate>97</emma.methodRate>
+        <emma.lineRate>97</emma.lineRate>
+        <cobertura.totalBranchRate>97</cobertura.totalBranchRate>
+        <cobertura.totalLineRate>97</cobertura.totalLineRate>
+        <coverage.methodRate>97</coverage.methodRate>
+        <coverage.lineRate>97</coverage.lineRate>
+        <coverage.blockRate>97</coverage.blockRate>
+        <checkstyle.skip>true</checkstyle.skip>
+        <automation-Server.name>sfstandard-infra-svc-prod-b2e-edc.opr.statefarm.org</automation-Server.name>
+        <register-ear.goal>register-std-application-ear</register-ear.goal>
+        <deploy-ear.goal>deploy-std-application-ear</deploy-ear.goal>
+        
+        <war.packagingExcludes />
+       
+        <easymock.version>3.2</easymock.version>
+    </properties>
+	
+   <scm>
+	<connection>scm:git:https://sfgitlab.opr.statefarm.org/ROVR/3.2.0.git</connection>
+	<developerConnection>scm:git:https://sfgitlab.opr.statefarm.org/ROVR/3.2.0.git</developerConnection>
+	<url>https://sfgitlab.opr.statefarm.org/ROVR/3.2.0/tree/master</url>
+	<tag>HEAD</tag>
+    </scm>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>lt00as50</id>
+            <url>https://lt00as50.opr.statefarm.org/artifactory/repo</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>lt00as50</id>
+            <url>https://lt00as50.opr.statefarm.org/artifactory/repo</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>lt00as50</id>
+            <url>
+                https://lt00as50.opr.statefarm.org/artifactory/apps-releases-local
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>lt00as50</id>
+            <url>
+                https://lt00as50.opr.statefarm.org/artifactory/apps-snapshots-local
+            </url>
+        </snapshotRepository>
+    </distributionManagement>
+	
+    <build>
+        <outputDirectory>${default.output.directory}</outputDirectory>
+        <pluginManagement>
+            <plugins>
+			
+				<!-- plugin that sets build number as a maven property -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>buildnumber-maven-plugin</artifactId>
+					<version>1.1</version>
+					<executions>
+						<execution>
+							<phase>validate</phase>
+							<goals>
+								<goal>create</goal>
+							</goals>
+							<configuration>
+								<format>{0,date,yyDHHmm}</format>
+								<items>
+									<item>timestamp</item>
+								</items>
+							</configuration>
+						</execution>
+					</executions>
+					<configuration>
+						<format>{0,date,yyDHHmm}</format>
+						<items>
+							<item>timestamp</item>
+						</items>
+					</configuration>
+				</plugin>
+		
+		 <!-- ******** Configuring Maven Jar Plugin ************ -->
+		                
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.4</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathLayoutType>custom</classpathLayoutType>
+                                <customClasspathLayout>${customClasspathLayout}</customClasspathLayout>
+                                <classpathPrefix>${lib.root}</classpathPrefix>
+                            </manifest>
+                            <manifestEntries>
+                                <Implementation-Version>${project.version}</Implementation-Version>
+                                <source-coordinates>${source.coordinates}</source-coordinates>
+                                <build-coordinates>${build.coordinates}</build-coordinates>
+                                <artifact-coordinates>${project.groupId}:${project.artifactId}:${project.version}</artifact-coordinates>
+                                <buildtime>${timestamp}</buildtime>
+                                <Tag_Name>${project.version}</Tag_Name>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+
+                <!-- ******** Configuring Maven Compiler Plugin ************ -->
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.2</version>
+                    <configuration>
+                        <fork>true</fork>
+                        <source>${jdk.version}</source>
+                        <target>${jdk.version}</target>
+                       <!-- <executable>${java.home}/bin/javac</executable> -->
+                    </configuration>
+                </plugin>
+
+                <!-- ******** Configuring SureFire Plugin ************ -->
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                    <!-- 
+                        <jvm>${java.home}/bin/java</jvm>
+                         -->
+                    </configuration>
+                </plugin>
+
+                <!-- ******** Configuring Maven War Plugin ************ -->
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                        <warSourceDirectory>${warSourceDirectory}</warSourceDirectory>
+                        <outputFileNameMapping>@{artifactId}@.@{extension}@</outputFileNameMapping>
+                        <packagingExcludes>${war.packagingExcludes}</packagingExcludes>
+					    <dependentWarExcludes>${war.dependentExcludes}</dependentWarExcludes>
+					
+						<webResources>
+							<resource>
+								<directory>src/main/webapp/</directory>
+								<filtering>true</filtering>
+							</resource>
+						</webResources>
+					                        
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathLayoutType>custom</classpathLayoutType>
+                                <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
+                                <classpathPrefix>${lib.root}</classpathPrefix>
+                            </manifest>
+                            <manifestEntries>
+                                <Implementation-Version>${project.version}</Implementation-Version>
+                                <source-coordinates>${source.coordinates}</source-coordinates>
+                                <build-coordinates>${build.coordinates}</build-coordinates>
+                                <artifact-coordinates>${project.groupId}:${project.artifactId}:${project.version}</artifact-coordinates>
+                                <buildtime>${timestamp}</buildtime>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+
+                <!-- ******** Configuring Maven EJB Plugin ************ -->
+                <plugin>
+                    <artifactId>maven-ejb-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                    	<ejbSourceDirectory>${ejbSourceDirectory}</ejbSourceDirectory>
+                    	<ejbVersion>3.0</ejbVersion>
+                    	
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathLayoutType>custom</classpathLayoutType>
+                                <customClasspathLayout>${customClasspathLayout}</customClasspathLayout>
+                                <classpathPrefix>${lib.root}</classpathPrefix>
+                            </manifest>
+                            <manifestEntries>
+                                <Implementation-Version>${project.version}</Implementation-Version>
+                                <source-coordinates>${source.coordinates}</source-coordinates>
+                                <build-coordinates>${build.coordinates}</build-coordinates>
+                                <artifact-coordinates>${project.groupId}:${project.artifactId}:${project.version}</artifact-coordinates>
+                                <buildtime>${timestamp}</buildtime>
+                                <Tag_Name>${project.version}</Tag_Name>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <!-- ******** Configuring Maven EAR Plugin ************ -->
+                <plugin>
+                    <artifactId>maven-ear-plugin</artifactId>
+                    <version>2.9</version>
+                    <configuration>
+                        <generateApplicationXml>false</generateApplicationXml>
+                        <earSourceDirectory>${earSourceDirectory}</earSourceDirectory>
+                        <filtering>true</filtering>
+                        <fileNameMapping>${fileNameMapping}</fileNameMapping>
+                        <packagingExcludes>${ear.packagingExcludes}</packagingExcludes>
+                        <version>6</version>
+                        <!-- For JEE5+ projects, jars placed in lib are automatically on the 
+							EAR classpath. Does not require manifest management -->
+                        <defaultLibBundleDir>${lib.root}</defaultLibBundleDir>
+                        <archive>
+                            <manifestEntries>
+                                <Implementation-Version>${project.version}</Implementation-Version>
+                                <source-coordinates>${source.coordinates}</source-coordinates>
+                                <build-coordinates>${build.coordinates}</build-coordinates>
+                                <artifact-coordinates>${project.groupId}:${project.artifactId}:${project.version}</artifact-coordinates>
+                                <buildtime>${timestamp}</buildtime>
+                               <!-- <Build-scmRevision>${SVN_REVISION}</Build-scmRevision> -->
+                                <Tag_Name>${project.version}</Tag_Name>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <!-- ******** Configuring Maven Release Plugin ************ -->
+                <!--plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.2.1</version>
+                    <configuration>
+                        <tagNameFormat>@{project.version}</tagNameFormat>
+                        <preparationGoals>clean install -P hudson,release-prepare,abc</preparationGoals>
+                        <goals>clean deploy -P hudson,release-perform,abc</goals>
+                    </configuration>
+                </plugin -->
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <configuration>
+                        <preparationGoals>clean install</preparationGoals>
+						<arguments>-Phudson,abc,release-perform</arguments>
+                    </configuration>
+                </plugin>
+
+                <!-- ******** Configuring Maven ANT Plugin ************ -->
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                    <dependencies>
+                        <!-- Core ant support -->
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant</artifactId>
+                            <version>${ant.runtime.version}</version>
+                        </dependency>
+
+                        <!-- Flow control support -->
+                        <dependency>
+                            <groupId>ant-contrib</groupId>
+                            <artifactId>ant-contrib</artifactId>
+                            <version>1.0b3</version>
+                        </dependency>
+
+                        <!-- JavaScript support -->
+                        <dependency>
+                            <groupId>rhino</groupId>
+                            <artifactId>js</artifactId>
+                            <version>1.7R2</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant-apache-bsf</artifactId>
+                            <version>${ant.runtime.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <!-- ****** Maven Checkstyle Plugin COnfiguration ********** -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle.plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>sf.client</groupId>
+                            <artifactId>build_tools</artifactId>
+                            <version>2.2</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>checkstyle</groupId>
+                            <artifactId>checkstyle-optional</artifactId>
+                            <version>4.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>checkstyle</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>5.0</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>sf.checkstyle</groupId>
+                            <artifactId>custom_5</artifactId>
+                            <version>1.0.2</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                     	<skip>${checkstyle.skip}</skip>
+                        <configLocation>AEAT_Java_220_v5-1.1.xml</configLocation>
+                        <includeResources>false</includeResources>
+                        <excludes>
+							**/sf.former.junitutils/**,
+						</excludes>
+			        </configuration>
+                </plugin>
+
+                <!-- ****** Maven Source Plugin COnfiguration ********** -->
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2.1</version>
+                </plugin>
+
+                <!-- ****** Maven Install Plugin COnfiguration ********** -->
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                </plugin>
+
+                <!-- ****** Maven SCM Plugin COnfiguration ********** -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.9</version>
+                </plugin>
+
+                <!-- ****** Maven Dependency Plugin COnfiguration ********** -->
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.9</version>
+                </plugin>
+
+                <!-- ****** Maven Assembly Plugin COnfiguration ********** -->
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.5.3</version>
+                </plugin>
+
+                <!-- ****** Maven Sonar Plugin Configuration ********** -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.7.3</version>
+                </plugin>
+
+
+                <!-- ******* Maven Emma Plugin Configuration ********* -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>emma-maven-plugin</artifactId>
+                    <version>${emma.version}</version>
+                    <configuration>
+                        <check>
+                            <classRate>${emma.classRate}</classRate>
+                            <methodRate>${emma.methodRate}</methodRate>
+                            <lineRate>${emma.lineRate}</lineRate>
+                        </check>
+				            <filter>                                     
+				                <excludes>java/test/*</excludes>
+				            </filter>
+                    </configuration>
+                </plugin>
+
+                <!-- ******* Maven FindBugs Plugin Configuration ********* -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                    <version>${findbugs.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>findbugs</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- ******* Maven PMD Plugin Configuration ********* -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${pmd.plugin.version}</version>
+                    <configuration>
+                        <targetJdk>${jdk.version}</targetJdk>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>pmd</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- ******* Maven Websphere Plugin Configuration ********* -->
+                <plugin>
+                    <groupId>sf.cr.maven.plugins</groupId>
+                    <artifactId>cr-websphere-plugin</artifactId>
+                    <version>1.1-RC-003</version>
+                </plugin>
+
+                <!-- ******* Maven Deploy Plugin Configuration ********* -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+
+                <!-- ******* Maven Version Plugin Configuration ********* -->
+                <plugin>
+                    <groupId>sf.cr.maven.plugins</groupId>
+                    <artifactId>cr-version-plugin</artifactId>
+                    <version>1.2-RC-005</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-codegen-plugin</artifactId>
+                    <version>${cxf.version}</version>
+                    <executions>
+                        <execution>
+                            <id>wsdl2java</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>wsdl2java</goal>
+                            </goals>
+                            <configuration>
+                                <sourceRoot>${generated-sources.directory}</sourceRoot>
+                                <defaultOptions>
+                                    <!-- By default, CXF 2.3+ generates JAX-WS 2.2 code. ICP Phases 
+										0 and 1 require a Sun 1.6 JDK which embeds JAX-WS 2.1. Therefore, the CXF 
+										frontEnd is defaulted to jaxws21. -->
+                                    <frontEnd>jaxws21</frontEnd>
+                                </defaultOptions>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.cxf</groupId>
+                    <artifactId>cxf-java2ws-plugin</artifactId>
+                    <version>${cxf.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.cxf</groupId>
+                            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                            <version>${cxf.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.cxf</groupId>
+                            <artifactId>cxf-rt-frontend-simple</artifactId>
+                            <version>${cxf.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.cxf</groupId>
+                            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                            <version>${cxf.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.cxf</groupId>
+                                        <artifactId>cxf-codegen-plugin</artifactId>
+                                        <versionRange>[${cxf.version},)</versionRange>
+                                        <goals>
+                                            <goal>wsdl2java</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.cxf
+                                        </groupId>
+                                        <artifactId>
+                                            cxf-java2ws-plugin
+                                        </artifactId>
+                                        <versionRange>[${cxf.version},)</versionRange>
+                                        <goals>
+                                            <goal>java2ws</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+
+                <!-- ******* Jupiter Plugin Configuration ********* -->
+                <plugin>
+                    <groupId>sf.cr.maven.plugins</groupId>
+                    <artifactId>jupiter-maven-plugin</artifactId>
+                    <version>${jupiter.plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- ******* Artifact Deployer Plugin Configuration ********* -->
+                <plugin>
+                    <groupId>sf.icptp.maven.plugin</groupId>
+                    <artifactId>artifact-deployer-plugin</artifactId>
+                    <version>${artifact-deployer.version}</version>
+                    <configuration>
+                    	<checkStatusInterval>30</checkStatusInterval>
+                    </configuration>
+                </plugin>
+                
+                <plugin>
+                	<groupId>com.samaxes.maven</groupId>
+                	<artifactId>minify-maven-plugin</artifactId>
+                	<version>1.7.4</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+
+        <!--********** Workstation Profile ********** -->
+
+        <profile>
+            <id>workstation</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- If your workstation uses a different location, then setup a 'workstation' 
+					profile in ${user.home}/.m2/settings.xml -->
+                <was85.home>C:\SDP\WebSphere\AppServer</was85.home>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>hudson</id>
+            <properties>
+                <!-- The following environment variable is available on all hudson servers -->
+                <was85.home>${env.WAS85_RUNTIMES}</was85.home>
+                <source.coordinates>svn:${project.parent.scm.url}@${SVN_REVISION}</source.coordinates>
+                <build.coordinates>${HUDSON_URL}:${JOB_NAME}:${BUILD_NUMBER}:${BUILD_ID}</build.coordinates>
+            </properties>
+        </profile>
+
+        <!-- Not recommended to change, unless abc-instrumentation plugin version 
+			changes and there are additional attributes needed -->
+
+        <!--********** abc Profile ********** -->
+        <profile>
+            <id>abc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <warSourceExcludes>WEB-INF/web.xml</warSourceExcludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-ejb-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>META-INF/ejb-jar.xml</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>sf.maven.plugins</groupId>
+                        <artifactId>abc-instrumentation</artifactId>
+                        <version>1.0.6</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>instrument-ear</goal>
+                                    <goal>instrument-war</goal>
+                                    <goal>instrument-ejb</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>  
+                </plugins>
+            </build>
+        </profile>
+        <!--********** abc-ha Profile ********** -->
+        <profile>
+            <id>abc-ha</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <warSourceExcludes>WEB-INF/web.xml</warSourceExcludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-ejb-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>META-INF/ejb-jar.xml</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                   
+                    <plugin>
+                        <groupId>sf.maven.plugins</groupId>
+                        <artifactId>abc-instrumentation</artifactId>
+                        <version>1.0.6</version>
+                        <configuration>
+                            <thsContext>true</thsContext>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>instrument-ear</goal>
+                                    <goal>instrument-war</goal>
+                                    <goal>instrument-ejb</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
+                </plugins>
+            </build>
+        </profile>
+
+        <!--********** Profile for Quality builds ********** -->
+        <profile>
+            <id>quality</id>
+            <reporting>
+                <plugins>
+                    <!-- EMMA Coverage -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <version>${emma.version}</version>
+                    </plugin>
+                    <!-- Checkstyle -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <configuration>
+                        	<skip>${checkstyle.skip}</skip>
+                            <configLocation>AEAT_Java_220_v5-1.1.xml</configLocation>
+                        </configuration>
+                    </plugin>
+                    <!-- FindBugs -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>${findbugs.plugin.version}</version>
+                    </plugin>
+                    <!-- PMD -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${pmd.plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>sf.cr.maven.plugins</groupId>
+                        <artifactId>jupiter-maven-plugin</artifactId>
+                        <version>${jupiter.plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </reporting>
+            <build>
+                <plugins>
+                    <!-- EMMA Coverage -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>emma</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Checkstyle -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                     		<skip>${checkstyle.skip}</skip>
+                            <configLocation>AEAT_Java_220_v5-1.1.xml</configLocation>
+	                    </configuration>
+                    </plugin>
+                    <!-- FindBugs -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                    <!-- PMD -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>sf.cr.maven.plugins</groupId>
+                        <artifactId>jupiter-maven-plugin</artifactId>
+                        <version>${jupiter.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--********** Profile for Integration builds ********** -->
+        <profile>
+            <id>integration</id>
+            <reporting>
+                <plugins>
+                    <!-- EMMA Coverage -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <version>${emma.version}</version>
+                    </plugin>
+                    <!-- Checkstyle -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <configuration>
+	                        <skip>${checkstyle.skip}</skip>
+                            <configLocation>AEAT_Java_220_v5-1.1.xml</configLocation>
+                        </configuration>
+                    </plugin>
+                    <!-- FindBugs -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>${findbugs.plugin.version}</version>
+                    </plugin>
+                    <!-- PMD -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${pmd.plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </reporting>
+            <build>
+                <plugins>
+                    <!-- EMMA Coverage -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>emma</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Checkstyle -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- FindBugs -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                    <!-- PMD -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--********** Profile for Integration builds that deploy SNAPSHOT ********** -->
+        <profile>
+            <id>integration-deploy</id>
+            <reporting>
+                <plugins>
+                    <!-- EMMA Coverage -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <version>${emma.version}</version>
+                    </plugin>
+                    <!-- Checkstyle -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <configuration>
+                            <configLocation>AEAT_Java_220_v5-1.1.xml</configLocation>
+                        </configuration>
+                    </plugin>
+                    <!-- FindBugs -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>${findbugs.plugin.version}</version>
+                    </plugin>
+                    <!-- PMD -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${pmd.plugin.version}</version>
+                    </plugin>
+                    <plugin>
+	                	<groupId>com.samaxes.maven</groupId>
+	                	<artifactId>minify-maven-plugin</artifactId>
+	                	<version>1.7.4</version>
+	                </plugin>
+                </plugins>
+            </reporting>
+            <build>
+                <plugins>
+                    <!-- EMMA Coverage -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>emma</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Checkstyle -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- FindBugs -->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                    <!-- PMD -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                    </plugin>
+                    
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>release-prepare</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>emma</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${maven-checkstyle-plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <version>${emma.version}</version>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <profile>
+            <id>release-perform</id>
+            <build>
+                <plugins>
+                    
+                    <plugin>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>emma</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${maven-checkstyle-plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <version>${emma.version}</version>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <!--********** Checkstyle Profile ********** -->
+        <profile>
+            <id>checkstyle</id>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <configuration>
+                            <configLocation>AEAT_Java_220_v5-1.1.xml</configLocation>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>checkstyle</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--********** srcjar Profile ********** -->
+        <profile>
+            <id>srcjar</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--********** Profile for EMMA Coverage************** -->
+
+        <profile>
+            <id>emma</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>emma</goal>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>emma-maven-plugin</artifactId>
+                        <inherited>true</inherited>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <!--********** FindBugs Profile *********************** -->
+        <profile>
+            <id>findbugs</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <!--*************** PMD Profile ********************* -->
+        <profile>
+            <id>pmd</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <!--*************** Websphere Profile ********************* -->
+        <profile>
+            <id>websphere</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>sf.cr.maven.plugins</groupId>
+                        <artifactId>cr-websphere-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>ejbdeploy</id>
+                                <configuration>
+                                    <options>
+                                        <trace>true</trace>
+                                        <keep>true</keep>
+                                    </options>
+                                </configuration>
+                                <goals>
+                                    <goal>ejbdeploy</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>wsdeploy</id>
+                                <configuration>
+                                    <options>
+                                        <trace>true</trace>
+                                    </options>
+                                </configuration>
+                                <goals>
+                                    <goal>wsdeploy</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>ejbclient</id>
+                                <configuration>
+                                    <executeWebsphereClasses>true</executeWebsphereClasses>
+                                </configuration>
+                                <goals>
+                                    <goal>ejbclient</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--*************** Websphere Profile ********************* -->
+        <profile>
+            <!-- To optimize WebSphere deployment within RSA when selecting 'Run server 
+				with resources within the workspace', activate this profile in the web project. -->
+            <id>rsa8-web</id>
+            <properties>
+                <default.output.directory>src/main/webapp/WEB-INF/classes</default.output.directory>
+            </properties>
+        </profile>
+    </profiles>
+</project>
